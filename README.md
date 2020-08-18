@@ -13,7 +13,7 @@ Trabalho de programação de agentes baseados em First-Order Logic, para o curso
 
 ## Código fonte em Prolog
 
-### Estrutura de arquivos / classes
+### Estrutura de arquivos
 
 - problema-1-kb.pl - Inicialização da base de conhecimento para o problema 1, de acordo com as anotações de ordem de chegada dos competidores, observadas pela plateia.
 - problema-1-queries.pl - Predicados definidos por regras, para resolver o problema da ordem que os competidores chegaram ao final da corrida.
