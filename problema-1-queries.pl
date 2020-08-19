@@ -61,6 +61,5 @@ colocacao([X | Calda], Classificacao, Posicao) :-
     colocacao([X | Calda], Classificacao, ListaTratada, Posicao).
 
 classificacao :-
-    obterTodosCompetidores(Competidores),
-    % o valor 2 refere-se a opção de colocação indefinida
+    obterTodosCompetidores(Competidores),    
     colocacao(Competidores, [], 1).
