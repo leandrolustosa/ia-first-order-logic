@@ -32,38 +32,35 @@ tratarLista([], _, []).
 tratarLista([X|Calda], L2, Resultado):- member(X, L2), !, tratarLista(Calda, L2, Resultado). 
 tratarLista([X|Calda], L2, [X|Resultado]):- tratarLista(Calda, L2, Resultado).
 
-% encerra a função recursiva, pois acabaram os 
-% competidores a serem analisados
-colocacao([], _, [], _, 2).
-
 % função conclusiva, quando lista tratada for vazia
 % ou seja, ninguém chegou na frente, resultado é impresso
-colocacao([X | Calda], Classificacao, [], Posicao, 1) :-
+colocacao([X | Calda], Classificacao, [], Posicao) :-
     format('Posição ~d: ~s~n', [Posicao, X]),
     NovaPosicao is Posicao + 1,    
-    colocacao(Calda, [X | Classificacao], [], NovaPosicao, 2).
+    colocacao(Calda, [X | Classificacao], NovaPosicao).
 
 % função não conclusiva é executada, lista tratada 
 % contém os competidores que chegaram antes, 
 % é tratada a duplicidade dos itens e depois
 % são incluídos no início da fila
-colocacao([X | Calda], Classificacao, ListaTratada, Posicao, 0) :-    
+colocacao([X | Calda], Classificacao, ListaTratada, Posicao) :-
     tratarLista(Calda, ListaTratada, CaldaTratada),
     append(ListaTratada, [X | CaldaTratada], Competidores),    
-    colocacao(Competidores, Classificacao, [], Posicao, 2).
+    colocacao(Competidores, Classificacao, Posicao).
 
+% encerra a função recursiva, pois acabaram os 
+% competidores a serem analisados
+colocacao([], _, _).
 % função recursiva que calcula as colocações dos competidores
-colocacao([X | Calda], Classificacao, [], Posicao, 2) :-
+colocacao([X | Calda], Classificacao, Posicao) :-
+    % se setof retornar false, então ChegaramAntes 
+    % é inicializada com uma lista vazia
     (setof(Z, Z^chegou(Z, X), ChegaramAntes);ChegaramAntes = []),
     % remove da lista todos que já estão classificados
-    tratarLista(ChegaramAntes, Classificacao, ListaTratada),
-    length(ListaTratada, Tratados),
-    % se lista tratada for vazia, a posição que o competidor
-    % chegou é conclusiva = 1, caso não não é conclusiva = 0    
-    (Tratados =:= 0,Conclusivo=1;Conclusivo=0),
-    colocacao([X | Calda], Classificacao, ListaTratada, Posicao, Conclusivo).
+    tratarLista(ChegaramAntes, Classificacao, ListaTratada),    
+    colocacao([X | Calda], Classificacao, ListaTratada, Posicao).
 
 classificacao :-
     obterTodosCompetidores(Competidores),
     % o valor 2 refere-se a opção de colocação indefinida
-    colocacao(Competidores, [], [], 1, 2).
+    colocacao(Competidores, [], 1).
